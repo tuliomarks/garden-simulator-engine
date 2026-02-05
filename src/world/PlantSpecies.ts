@@ -8,4 +8,9 @@ export interface PlantSpecies {
   nutrientsPerTick: number;
 
   growthEfficiency: number;  // how well resources convert to growth
+
+  // temperature preferences (C)
+  optimalTemp: number;
+  tempTolerance: number;
+  minGrowthTemp: number;
 }

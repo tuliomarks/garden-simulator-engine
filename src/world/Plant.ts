@@ -11,4 +11,9 @@ export interface Plant {
   // internal buffers (per-tick)
   absorbedMoisture: number;
   absorbedNutrients: number;
+
+  // temperature tracking (per-day)
+  tempAccumulator: number;
+  tempSamples: number;
+  isDormant: boolean;
 }

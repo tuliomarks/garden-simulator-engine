@@ -4,7 +4,7 @@ import { Phase } from "../engine/Phase";
 import { TickContext } from "../engine/TickContext";
 
 export class SoilMoistureSystem implements System {
-  readonly phase = Phase.ENVIRONMENT;
+  readonly phase = Phase.MOISTURE;
 
   update(ctx: TickContext): void {
     const current = ctx.current.grid;

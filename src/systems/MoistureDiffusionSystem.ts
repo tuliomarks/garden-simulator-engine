@@ -5,7 +5,7 @@ import { TickContext } from "../engine/TickContext";
 import { Neighbors4 } from "../world/Neighbors";
 
 export class MoistureDiffusionSystem implements System {
-  readonly phase = Phase.ENVIRONMENT;
+  readonly phase = Phase.MOISTURE;
 
   update(ctx: TickContext): void {
     const gridCur = ctx.current.grid;
