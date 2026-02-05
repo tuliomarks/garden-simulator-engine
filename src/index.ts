@@ -5,6 +5,7 @@ import { PlantMetabolismSystem } from "./systems/PlantMetabolismSystem";
 import { PlantGrowthSystem } from "./systems/PlantGrowthSystem";
 import { TemperatureDecaySystem } from "./systems/TemperatureDecaySystem";
 import { SoilMoistureSystem } from "./systems/SoilMoistureSystem";
+import { MoistureDiffusionSystem } from "./systems/MoistureDiffusionSystem";
 
 const grid = new Grid(10, 10);
 const world = WorldState.initialize(grid);
@@ -16,6 +17,7 @@ const world = WorldState.initialize(grid);
 const engine = new Engine(world);
 engine.register(new TemperatureDecaySystem());
 engine.register(new SoilMoistureSystem());
+engine.register(new MoistureDiffusionSystem());
 engine.register(new PlantMetabolismSystem());
 engine.register(new PlantGrowthSystem());
 
