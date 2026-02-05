@@ -1,30 +1,43 @@
-// src/index.ts
 import { Engine } from "./engine/Engine";
 import { WorldState } from "./world/WorldState";
 import { Grid } from "./world/Grid";
+import { PlantMetabolismSystem } from "./systems/PlantMetabolismSystem";
+import { PlantGrowthSystem } from "./systems/PlantGrowthSystem";
 import { TemperatureDecaySystem } from "./systems/TemperatureDecaySystem";
 import { SoilMoistureSystem } from "./systems/SoilMoistureSystem";
 
 const grid = new Grid(10, 10);
+const world = WorldState.initialize(grid);
 
-// initialize like ONI does
-for (let cell = 0; cell < grid.size; cell++) {
-  grid.Element[cell] = 1;        // soil
-  grid.Mass[cell] = 100;         // kg
-  grid.Temperature[cell] = 20;   // °C
-  grid.Moisture[cell] = 50;      // % moisture
-  grid.Solid[cell] = 1;
-}
+/* ---------------------------------- */
+/* ENGINE INITIZATION                 */
+/* ---------------------------------- */
 
-const world = new WorldState(grid);
 const engine = new Engine(world);
-
 engine.register(new TemperatureDecaySystem());
 engine.register(new SoilMoistureSystem());
+engine.register(new PlantMetabolismSystem());
+engine.register(new PlantGrowthSystem());
 
-engine.run(50);
+/* ---------------------------------- */
+/* SIMULATION LOOP                    */
+/* ---------------------------------- */
 
-console.log(
-  engine.getState().grid.Temperature[grid.index(5, 5)],
-  engine.getState().grid.Moisture[grid.index(5, 5)]
-);
+const TOTAL_TICKS = 20;
+
+for (let i = 0; i < TOTAL_TICKS; i++) {
+  engine.step();
+
+  const tick = engine.getTick();
+  const state = engine.getState();
+
+  for (const plant of state.plants) {
+    console.log(
+      `[Tick ${tick}] Plant ${plant.id} | ` +
+      `Growth=${plant.growth.toFixed(3)} | ` +
+      `Health=${plant.health.toFixed(3)} | ` +
+      `Abs(M)=${plant.absorbedMoisture.toFixed(3)} | ` +
+      `Abs(N)=${plant.absorbedNutrients.toFixed(3)}`
+    );
+  }
+}
