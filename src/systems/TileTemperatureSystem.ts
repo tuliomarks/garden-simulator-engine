@@ -2,6 +2,7 @@
 import { System } from "../engine/System";
 import { Phase } from "../engine/Phase";
 import { TickContext } from "../engine/TickContext";
+import { WeatherProfileRegistry } from "../world/WeatherProfile";
 
 export class TileTemperatureSystem implements System {
   readonly phase = Phase.TEMPERATURE;
@@ -17,9 +18,15 @@ export class TileTemperatureSystem implements System {
       Math.sin((timeOfDay - 0.25) * Math.PI * 2)
     );
 
+    // Get weather profile for current weather
+    const weatherProfile = WeatherProfileRegistry[next.weather];
+
     const baseTemp =
       current.nightBaseTemp +
       (current.dayBaseTemp - current.nightBaseTemp) * solarFactor;
+
+    // Apply weather sunlight multiplier to base temperature
+    const weatherModifiedBaseTemp = baseTemp * weatherProfile.sunlightMultiplier;
 
     for (let cell = 0; cell < grid.size; cell++) {
       const sunlightModifier = grid.ExposedToSunlight[cell] ? 2 : -2;
@@ -32,9 +39,9 @@ export class TileTemperatureSystem implements System {
       } else if (moisture < 0.2) {
         moistureModifier += 1.5 * solarFactor;
       }
-
+      // Apply weather temperature offset
       grid.Temperature[cell] =
-        baseTemp + sunlightModifier + moistureModifier;
+        weatherModifiedBaseTemp + weatherProfile.tempOffset + sunlightModifier + moistureModifier;
     }
   }
 }

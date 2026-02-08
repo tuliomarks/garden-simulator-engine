@@ -22,9 +22,10 @@ export class Engine {
     const ctx = new TickContext(this.tick, this.state, nextState);
 
     for (const system of this.systems) {
+      //console.log(`\x1b[36mRunning system: ${system.constructor.name} (Phase ${system.phase})\x1b[0m`);
       system.update(ctx);
-    }
 
+    }
     this.state = nextState;
     this.tick++;
   }

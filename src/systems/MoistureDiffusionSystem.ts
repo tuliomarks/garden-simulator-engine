@@ -42,8 +42,11 @@ export class MoistureDiffusionSystem implements System {
         // average neighbor influence
         delta /= Neighbors4.length;
 
+        if (delta === 0) continue; // no change
+        
         gridNext.Moisture[cell] =
           Math.max(0, m + delta * rate);
+        
       }
     }
   }

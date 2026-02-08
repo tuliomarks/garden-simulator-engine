@@ -7,6 +7,7 @@ import { SoilMoistureSystem } from "./systems/SoilMoistureSystem";
 import { MoistureDiffusionSystem } from "./systems/MoistureDiffusionSystem";
 import { WorldTimeSystem } from "./systems/WorldTimeSystem";
 import { TileTemperatureSystem } from "./systems/TileTemperatureSystem";
+import { WeatherSystem } from "./systems/WeatherSystem";
 
 const grid = new Grid(10, 10);
 const world = WorldState.initialize(grid);
@@ -17,6 +18,7 @@ const world = WorldState.initialize(grid);
 
 const engine = new Engine(world);
 engine.register(new WorldTimeSystem());
+engine.register(new WeatherSystem());
 engine.register(new SoilMoistureSystem());
 engine.register(new MoistureDiffusionSystem());
 engine.register(new TileTemperatureSystem());
@@ -37,24 +39,27 @@ for (let i = 0; i < TOTAL_TICKS; i++) {
 
   const gridStatus = state.getGridStatus();
 
+  console.log(`\x1b[33m[Tick ${tick}] [Day ${Math.floor(tick / state.dayLengthTicks)}] | \n\x1b[0m`);
+
   console.log(
-    `[Tick ${tick}] Grid | ` +
-    `[isDay=${state.timeOfDay > 0.25 && state.timeOfDay < 0.75}] | ` +
+    `[Weather ${state.weather} -  ${Math.floor(state.weatherDurationTicks / state.dayLengthTicks)}] | \n` +
+    `[isDay ${state.timeOfDay > 0.25 && state.timeOfDay < 0.75}] | \n` +
     `Moisture avg=${gridStatus.moisture.avg.toFixed(3)} ` +
     `(min=${gridStatus.moisture.min.toFixed(2)}, ` +
-    `max=${gridStatus.moisture.max.toFixed(2)})` +
-    ` | Temp avg=${gridStatus.temperature.avg.toFixed(2)}°C ` +
-    ` | Light avg=${gridStatus.light.avg.toFixed(1)} `
+    `max=${gridStatus.moisture.max.toFixed(2)}) |\n` +
+    ` Temp avg=${gridStatus.temperature.avg.toFixed(2)}°C |\n` +
+    ` Light avg=${gridStatus.light.avg.toFixed(1)} `
     
   );
 
   for (const plant of state.plants) {
     console.log(
-      `[Tick ${tick}] Plant ${plant.id} | ` +
+      `[Plant ${plant.id} ] | ` +
       `Growth=${plant.growth.toFixed(3)} | ` +
       `Health=${plant.health.toFixed(3)} | ` +
       `Abs(M)=${plant.absorbedMoisture.toFixed(3)} | ` +
       `Abs(N)=${plant.absorbedNutrients.toFixed(3)}`
     );
   }
+  console.log("\x1b[32m--------------------------------------------------\x1b[0m \n");
 }

@@ -2,40 +2,49 @@
 import { Grid } from "./Grid";
 import { GridStatus } from "./GridStatus";
 import { Plant } from "./Plant";
+import { WeatherType } from "./WeatherType";
 
 export class WorldState {
   readonly grid: Grid;
-  readonly plants: Plant[];
+  plants: Plant[];
   timeOfDay: number;     // 0..1
   dayLengthTicks: number;
   dayBaseTemp: number;
   nightBaseTemp: number;
+  weather: WeatherType;
+  weatherDurationTicks: number;
 
   constructor(
     grid: Grid,
-    plants: Plant[] = [],
     timeOfDay = 0,
     dayLengthTicks = 20,
     dayBaseTemp = 24,
-    nightBaseTemp = 12
+    nightBaseTemp = 12,
+    weather = WeatherType.CLEAR,
+    weatherDurationTicks = 0
   ) {
     this.grid = grid;
-    this.plants = plants;
+    this.plants = [];
     this.timeOfDay = timeOfDay;
     this.dayLengthTicks = dayLengthTicks;
     this.dayBaseTemp = dayBaseTemp;
     this.nightBaseTemp = nightBaseTemp;
+    this.weather = weather;
+    this.weatherDurationTicks = weatherDurationTicks;
   }
 
   clone(): WorldState {
-    return new WorldState(
+    const newWorldState = new WorldState(
       this.grid.clone(),
-      this.plants.map(p => ({ ...p })),
       this.timeOfDay,
       this.dayLengthTicks,
       this.dayBaseTemp,
-      this.nightBaseTemp
+      this.nightBaseTemp,
+      this.weather,
+      this.weatherDurationTicks
     );
+    newWorldState.plants = this.plants.map(p => ({...p}));
+    return newWorldState;
   }
 
   static initialize(grid: Grid): WorldState {  
@@ -48,10 +57,26 @@ export class WorldState {
       grid.ExposedToSunlight[cell] = 1;
     }
 
-    return new WorldState(grid, [
+    // Pick initial weather randomly (2-5 in-game days duration)
+    const weatherTypes = Object.values(WeatherType);
+    const initialWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
+    const daysLength = 20; // dayLengthTicks
+    const minDays = 2;
+    const maxDays = 5;
+    const weatherDurationTicks = (minDays + Math.random() * (maxDays - minDays)) * daysLength;
+    const worldState = new WorldState(grid, 0, 20, 24, 12, initialWeather, weatherDurationTicks);
+
+    //worldState.instantiatePlants();
+    
+    return worldState;
+  }
+
+  instantiatePlants(): Plant[] { 
+
+    this.plants.push(
       {
         id: "plant-1",
-        cell: grid.index(5, 5),
+        cell: this.grid.index(5, 5),
         speciesId: 1,
         growth: 0,
         health: 1,
@@ -60,11 +85,13 @@ export class WorldState {
         tempAccumulator: 0,
         tempSamples: 0,
         isDormant: false,
-      },
-    ]);
-  }
+      }
+    );
 
-   getGridStatus(): GridStatus {
+    return this.plants;
+  }
+      
+  getGridStatus(): GridStatus {
     const g = this.grid;
     const n = g.size;
 
