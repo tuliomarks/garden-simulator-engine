@@ -13,6 +13,7 @@ export class WorldState {
   nightBaseTemp: number;
   weather: WeatherType;
   weatherDurationTicks: number;
+  weatherTotalDurationTicks: number;
 
   constructor(
     grid: Grid,
@@ -20,8 +21,6 @@ export class WorldState {
     dayLengthTicks = 20,
     dayBaseTemp = 24,
     nightBaseTemp = 12,
-    weather = WeatherType.CLEAR,
-    weatherDurationTicks = 0
   ) {
     this.grid = grid;
     this.plants = [];
@@ -29,8 +28,10 @@ export class WorldState {
     this.dayLengthTicks = dayLengthTicks;
     this.dayBaseTemp = dayBaseTemp;
     this.nightBaseTemp = nightBaseTemp;
-    this.weather = weather;
-    this.weatherDurationTicks = weatherDurationTicks;
+    
+    this.weather = WeatherType.CLEAR;
+    this.weatherDurationTicks = 0;
+    this.weatherTotalDurationTicks = 0;
   }
 
   clone(): WorldState {
@@ -39,10 +40,11 @@ export class WorldState {
       this.timeOfDay,
       this.dayLengthTicks,
       this.dayBaseTemp,
-      this.nightBaseTemp,
-      this.weather,
-      this.weatherDurationTicks
+      this.nightBaseTemp
     );
+    newWorldState.weather = this.weather;
+    newWorldState.weatherDurationTicks = this.weatherDurationTicks;
+    newWorldState.weatherTotalDurationTicks = this.weatherTotalDurationTicks;
     newWorldState.plants = this.plants.map(p => ({...p}));
     return newWorldState;
   }
@@ -57,14 +59,7 @@ export class WorldState {
       grid.ExposedToSunlight[cell] = 1;
     }
 
-    // Pick initial weather randomly (2-5 in-game days duration)
-    const weatherTypes = Object.values(WeatherType);
-    const initialWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
-    const daysLength = 20; // dayLengthTicks
-    const minDays = 2;
-    const maxDays = 5;
-    const weatherDurationTicks = (minDays + Math.random() * (maxDays - minDays)) * daysLength;
-    const worldState = new WorldState(grid, 0, 20, 24, 12, initialWeather, weatherDurationTicks);
+    const worldState = new WorldState(grid, 0, 20, 20, 15);
 
     //worldState.instantiatePlants();
     

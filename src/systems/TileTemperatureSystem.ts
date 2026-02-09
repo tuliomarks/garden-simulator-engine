@@ -13,35 +13,61 @@ export class TileTemperatureSystem implements System {
     const grid = next.grid;
 
     const timeOfDay = next.timeOfDay;
+
+    // Day / night sinusoidal cycle
     const solarFactor = Math.max(
       0,
       Math.sin((timeOfDay - 0.25) * Math.PI * 2)
     );
 
-    // Get weather profile for current weather
     const weatherProfile = WeatherProfileRegistry[next.weather];
 
+    // Base temperature from day/night
     const baseTemp =
       current.nightBaseTemp +
       (current.dayBaseTemp - current.nightBaseTemp) * solarFactor;
 
-    // Apply weather sunlight multiplier to base temperature
-    const weatherModifiedBaseTemp = baseTemp * weatherProfile.sunlightMultiplier;
+    // --- WEATHER PROGRESSION ---
+    const remaining = next.weatherDurationTicks;
+    const total = next.weatherTotalDurationTicks;
+
+    const progress = Math.min(
+      1,
+      Math.max(0, 1 - remaining / total)
+    );
+
+    // Smooth peak at mid-weather
+    const weatherCurve = Math.sin(progress * Math.PI);
+
+    // Total delta applied progressively
+    const weatherTempDelta =
+      weatherCurve * weatherProfile.tempDeltaTotal;
 
     for (let cell = 0; cell < grid.size; cell++) {
       const sunlightModifier = grid.ExposedToSunlight[cell] ? 2 : -2;
 
       const moisture = grid.Moisture[cell] ?? 0;
-      let moistureModifier = 0;
 
-      if (moisture > 0.6) {
-        moistureModifier -= 1.5;
-      } else if (moisture < 0.2) {
-        moistureModifier += 1.5 * solarFactor;
+      // --- MOISTURE × TEMPERATURE INTERACTION ---
+      let moistureFactor = 1;
+
+      if (weatherTempDelta < 0 && moisture > 0.6) {
+        // Cold + humid = feels colder
+        moistureFactor += 0.25;
       }
-      // Apply weather temperature offset
+
+      if (weatherTempDelta > 0 && moisture > 0.6) {
+        // Hot + humid = evaporative buffering
+        moistureFactor -= 0.2;
+      }
+
+      const effectiveWeatherDelta =
+        weatherTempDelta * moistureFactor;
+
       grid.Temperature[cell] =
-        weatherModifiedBaseTemp + weatherProfile.tempOffset + sunlightModifier + moistureModifier;
+        baseTemp * weatherProfile.sunlightMultiplier +
+        effectiveWeatherDelta +
+        sunlightModifier;
     }
   }
 }

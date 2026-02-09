@@ -2,40 +2,54 @@
 import { WeatherType } from "./WeatherType";
 
 export interface WeatherProfile {
+  minDurationTicks: number;
+  maxDurationTicks: number;
   sunlightMultiplier: number;
-  tempOffset: number;
+  tempDeltaTotal: number;
   moisturePerTick: number;
 }
 
 export const WeatherProfileRegistry: Record<WeatherType, WeatherProfile> = {
   [WeatherType.CLEAR]: {
+    minDurationTicks: 10,
+    maxDurationTicks: 100,
     sunlightMultiplier: 1.0,
-    tempOffset: 0,
-    moisturePerTick: 0,
+    tempDeltaTotal: 5,
+    moisturePerTick: -0.01,
   },
   [WeatherType.CLOUDY]: {
+    minDurationTicks: 10,
+    maxDurationTicks: 60,
     sunlightMultiplier: 0.6,
-    tempOffset: -1,
+    tempDeltaTotal: -1.5,
     moisturePerTick: 0,
   },
   [WeatherType.RAIN]: {
+    minDurationTicks: 10,
+    maxDurationTicks: 60,
     sunlightMultiplier: 0.5,
-    tempOffset: -2,
-    moisturePerTick: 0.002,
+    tempDeltaTotal: -4,
+    moisturePerTick: 0.01,
   },
   [WeatherType.HEAVY_RAIN]: {
+    minDurationTicks: 5,
+    maxDurationTicks: 15,
     sunlightMultiplier: 0.3,
-    tempOffset: -3,
-    moisturePerTick: 0.006,
+    tempDeltaTotal: -6,
+    moisturePerTick: 0.05,
   },
   [WeatherType.HEATWAVE]: {
+    minDurationTicks: 5,
+    maxDurationTicks: 15,
     sunlightMultiplier: 1.1,
-    tempOffset: 6,
-    moisturePerTick: -0.002,
+    tempDeltaTotal: 12,
+    moisturePerTick: -0.05,
   },
   [WeatherType.COLD_SNAP]: {
+    minDurationTicks: 20,
+    maxDurationTicks: 60,
     sunlightMultiplier: 0.9,
-    tempOffset: -6,
+    tempDeltaTotal: -14,
     moisturePerTick: 0,
   },
 };
