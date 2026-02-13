@@ -12,8 +12,7 @@ export class Grid {
   Moisture: Float32Array;        // 0..1 soil moisture
   NPK: Float32Array;              // 0..1 nutrients  
   Disease: Uint32Array;          // contamination / pests
-  Light: Uint16Array;            // light level
-  ExposedToSunlight: Uint8Array; // 0 / 1
+  ExposedToSunlight: Float32Array; // 0 = dark, 1 = full sun
   Properties: Uint32Array;       // bitmask flags
 
   constructor(width: number, height: number) {
@@ -28,8 +27,7 @@ export class Grid {
     this.Moisture = new Float32Array(this.size);
     this.NPK = new Float32Array(this.size);
     this.Disease = new Uint32Array(this.size);
-    this.Light = new Uint16Array(this.size);
-    this.ExposedToSunlight = new Uint8Array(this.size);
+    this.ExposedToSunlight = new Float32Array(this.size);
     this.Properties = new Uint32Array(this.size);
   }
 
@@ -50,7 +48,6 @@ export class Grid {
     g.Moisture.set(this.Moisture);
     g.NPK.set(this.NPK);
     g.Disease.set(this.Disease);
-    g.Light.set(this.Light);
     g.ExposedToSunlight.set(this.ExposedToSunlight);
     g.Properties.set(this.Properties);
     return g;

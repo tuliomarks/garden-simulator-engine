@@ -54,7 +54,6 @@ export class WorldState {
     for (let cell = 0; cell < grid.size; cell++) {
       grid.Moisture[cell] = 0.5;
       grid.NPK[cell] = 0.5;
-      grid.Light[cell] = 1000;
       grid.Temperature[cell] = 20;
       grid.ExposedToSunlight[cell] = 1;
     }
@@ -113,7 +112,7 @@ export class WorldState {
       maxTemp = Math.max(maxTemp, t);
       sumTemp += t;
 
-      const l = g.Light[cell] ?? 0;
+      const l = g.ExposedToSunlight[cell] ?? 0;
       minLight = Math.min(minLight, l);
       maxLight = Math.max(maxLight, l);
       sumLight += l;

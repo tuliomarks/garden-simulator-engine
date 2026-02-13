@@ -10,6 +10,7 @@ export class WeatherSystem implements System {
 
   update(ctx: TickContext): void {
     const next = ctx.next;
+    const grid = next.grid;
 
     // Decrease weather duration
     next.weatherDurationTicks -= 1;
@@ -37,6 +38,23 @@ export class WeatherSystem implements System {
         
       next.weatherDurationTicks = durationTicks;
       next.weatherTotalDurationTicks = durationTicks;
+      
+    }
+
+    // Solar exposure 
+    const solarFactor = Math.max(
+      0,
+      Math.sin((next.timeOfDay - 0.25) * Math.PI * 2)
+    );
+
+    let weatherSunlightModifier = 1;
+
+    if (next.weather === WeatherType.CLOUDY || next.weather === WeatherType.RAIN || next.weather === WeatherType.HEAVY_RAIN) {
+      weatherSunlightModifier = 0.5; 
+    }
+
+    for (let cell = 0; cell < grid.size; cell++) {
+      grid.ExposedToSunlight[cell] = solarFactor * weatherSunlightModifier;
     }
   }
 }

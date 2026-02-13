@@ -43,7 +43,7 @@ async function runSimulation() {
     
     const time = state.timeOfDay * 24;
     const day = Math.floor(tick / state.dayLengthTicks) + 1;
-    console.clear();
+    //console.clear();
     console.log(`\x1b[33m[Tick ${tick}] [Day ${day}] [Time ${time.toFixed(2)}] | \n\x1b[0m`);
 
     console.log(
