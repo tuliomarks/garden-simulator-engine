@@ -28,7 +28,7 @@ export class WorldState {
     this.dayLengthTicks = dayLengthTicks;
     this.dayBaseTemp = dayBaseTemp;
     this.nightBaseTemp = nightBaseTemp;
-    
+
     this.weather = WeatherType.CLEAR;
     this.weatherDurationTicks = 0;
     this.weatherTotalDurationTicks = 0;
@@ -45,12 +45,11 @@ export class WorldState {
     newWorldState.weather = this.weather;
     newWorldState.weatherDurationTicks = this.weatherDurationTicks;
     newWorldState.weatherTotalDurationTicks = this.weatherTotalDurationTicks;
-    newWorldState.plants = this.plants.map(p => ({...p}));
+    newWorldState.plants = this.plants.map((p) => ({ ...p }));
     return newWorldState;
   }
 
-  static initialize(grid: Grid): WorldState {  
-    
+  static initialize(grid: Grid): WorldState {
     for (let cell = 0; cell < grid.size; cell++) {
       grid.Moisture[cell] = 0.5;
       grid.NPK[cell] = 0.5;
@@ -60,31 +59,28 @@ export class WorldState {
 
     const worldState = new WorldState(grid, 0, 20, 20, 15);
 
-    //worldState.instantiatePlants();
-    
+    // worldState.instantiatePlants();
+
     return worldState;
   }
 
-  instantiatePlants(): Plant[] { 
-
-    this.plants.push(
-      {
-        id: "plant-1",
-        cell: this.grid.index(5, 5),
-        speciesId: 1,
-        growth: 0,
-        health: 1,
-        absorbedMoisture: 0,
-        absorbedNutrients: 0,
-        tempAccumulator: 0,
-        tempSamples: 0,
-        isDormant: false,
-      }
-    );
+  instantiatePlants(): Plant[] {
+    this.plants.push({
+      id: "plant-1",
+      cell: this.grid.index(5, 5),
+      speciesId: 1,
+      growth: 0,
+      health: 1,
+      absorbedMoisture: 0,
+      absorbedNutrients: 0,
+      tempAccumulator: 0,
+      tempSamples: 0,
+      isDormant: false,
+    });
 
     return this.plants;
   }
-      
+
   getGridStatus(): GridStatus {
     const g = this.grid;
     const n = g.size;
@@ -92,6 +88,10 @@ export class WorldState {
     let minMoisture = Infinity;
     let maxMoisture = -Infinity;
     let sumMoisture = 0;
+
+    let minNutrient = Infinity;
+    let maxNutrient = -Infinity;
+    let sumNutrient = 0;
 
     let minTemp = Infinity;
     let maxTemp = -Infinity;
@@ -106,6 +106,11 @@ export class WorldState {
       minMoisture = Math.min(minMoisture, m);
       maxMoisture = Math.max(maxMoisture, m);
       sumMoisture += m;
+
+      const nutr = g.NPK[cell] ?? 0;
+      minNutrient = Math.min(minNutrient, nutr);
+      maxNutrient = Math.max(maxNutrient, nutr);
+      sumNutrient += nutr;
 
       const t = g.Temperature[cell] ?? 0;
       minTemp = Math.min(minTemp, t);
@@ -134,6 +139,11 @@ export class WorldState {
         min: minLight,
         max: maxLight,
         avg: sumLight / n,
+      },
+      nutrients: {
+        min: minNutrient,
+        max: maxNutrient,
+        avg: sumNutrient / n,
       },
     };
   }

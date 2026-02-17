@@ -5,7 +5,11 @@ export interface PlantSpecies {
 
   rootRadius: number;        // tiles
   moisturePerTick: number;   // desired
-  nutrientsPerTick: number;
+  nutrientsPerTick: number;  // legacy uptake target
+
+  // Phase 1 scalar nutrient fertility model
+  nutrientConsumptionRate?: number; // per tick
+  nutrientOptimalLevel?: number;    // default 1.0
 
   growthEfficiency: number;  // how well resources convert to growth
 

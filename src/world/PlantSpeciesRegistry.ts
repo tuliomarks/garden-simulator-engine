@@ -8,6 +8,8 @@ export const SpeciesRegistry: Record<number, PlantSpecies> = {
     rootRadius: 1,
     moisturePerTick: 0.02,
     nutrientsPerTick: 0.01,
+    nutrientConsumptionRate: 0.0005,
+    nutrientOptimalLevel: 1.0,
     growthEfficiency: 0.8,
     optimalTemp: 22,
     tempTolerance: 10,

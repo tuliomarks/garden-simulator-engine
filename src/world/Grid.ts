@@ -8,9 +8,9 @@ export class Grid {
   Solid: Uint8Array;             // 0 = walkable, 1 = blocked
   Foundation: Uint8Array;        // 0 = natural, 1 = built
   Element: Uint16Array;          // soil / terrain type
-  Temperature: Float32Array;     // °C (surface)
+  Temperature: Float32Array;     // surface temperature in C
   Moisture: Float32Array;        // 0..1 soil moisture
-  NPK: Float32Array;              // 0..1 nutrients  
+  NPK: Float32Array;             // 0..1 nutrients (scalar in phase 1)
   Disease: Uint32Array;          // contamination / pests
   ExposedToSunlight: Float32Array; // 0 = dark, 1 = full sun
   Properties: Uint32Array;       // bitmask flags

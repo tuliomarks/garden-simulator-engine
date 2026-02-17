@@ -4,6 +4,7 @@ import { Phase } from "../engine/Phase";
 import { TickContext } from "../engine/TickContext";
 import { SpeciesRegistry } from "../world/PlantSpeciesRegistry";
 import { clamp01 } from "../utils/math";
+import { getNutrientConsumptionRate } from "../world/NutrientModel";
 
 export class PlantGrowthSystem implements System {
   readonly phase = Phase.PLANT_GROWTH;
@@ -14,7 +15,7 @@ export class PlantGrowthSystem implements System {
     for (const plant of ctx.next.plants) {
       const species = SpeciesRegistry[plant.speciesId];
 
-      if (!species) continue; // skip unknown species
+      if (!species) continue;
 
       const tileTemp = ctx.next.grid.Temperature[plant.cell] ?? 0;
       plant.tempAccumulator += tileTemp;
@@ -34,11 +35,14 @@ export class PlantGrowthSystem implements System {
 
       if (plant.isDormant) continue;
 
-      const moistureRatio =
-        plant.absorbedMoisture / species.moisturePerTick;
+      const moistureDemand = species.moisturePerTick > 0 ? species.moisturePerTick : 1;
+      const nutrientDemandPerTick = getNutrientConsumptionRate(species);
 
+      const moistureRatio = plant.absorbedMoisture / moistureDemand;
       const nutrientRatio =
-        plant.absorbedNutrients / species.nutrientsPerTick;
+        nutrientDemandPerTick > 0
+          ? plant.absorbedNutrients / nutrientDemandPerTick
+          : 1;
 
       const limitingFactor = Math.min(moistureRatio, nutrientRatio, 1);
 

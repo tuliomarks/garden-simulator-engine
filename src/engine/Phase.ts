@@ -4,7 +4,8 @@ export enum Phase {
   WEATHER = 1,
   MOISTURE = 2,
   TEMPERATURE = 3,
-  PLANT_METABOLISM = 4,
-  PLANT_GROWTH = 5,
-  EVENTS = 6,
+  NUTRIENT_REGEN = 4,
+  PLANT_METABOLISM = 5,
+  PLANT_GROWTH = 6,
+  EVENTS = 7,
 }

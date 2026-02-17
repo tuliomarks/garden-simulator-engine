@@ -19,4 +19,10 @@ export interface GridStatus {
     max: number;
     avg: number;
   };
+  
+  nutrients: {
+    min: number;
+    max: number;
+    avg: number;
+  };
 }
