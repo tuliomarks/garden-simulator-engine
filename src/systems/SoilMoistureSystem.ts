@@ -1,8 +1,8 @@
 // src/systems/SoilMoistureSystem.ts
-import { System } from "../engine/System";
-import { Phase } from "../engine/Phase";
-import { TickContext } from "../engine/TickContext";
-import { WeatherProfileRegistry } from "../world/WeatherProfile";
+import { System } from "../engine/System.ts";
+import { Phase } from "../engine/Phase.ts";
+import { TickContext } from "../engine/TickContext.ts";
+import { WeatherProfileRegistry } from "../world/WeatherProfile.ts";
 
 export class SoilMoistureSystem implements System {
   readonly phase = Phase.MOISTURE;

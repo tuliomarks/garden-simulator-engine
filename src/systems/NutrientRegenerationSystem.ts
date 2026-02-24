@@ -1,8 +1,8 @@
 // src/systems/NutrientRegenerationSystem.ts
-import { Phase } from "../engine/Phase";
-import { System } from "../engine/System";
-import { TickContext } from "../engine/TickContext";
-import { clamp01 } from "../utils/math";
+import { Phase } from "../engine/Phase.ts";
+import { System } from "../engine/System.ts";
+import { TickContext } from "../engine/TickContext.ts";
+import { clamp01 } from "../utils/math.ts";
 
 const REGEN_RATE = 0.001;
 

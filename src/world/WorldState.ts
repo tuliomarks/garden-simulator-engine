@@ -1,12 +1,13 @@
 // src/world/WorldState.ts
-import { Grid } from "./Grid";
-import { GridStatus } from "./GridStatus";
-import { Plant } from "./Plant";
-import { WeatherType } from "./WeatherType";
+import { Grid } from "./Grid.ts";
+import { GridStatus } from "./GridStatus.ts";
+import { Plant } from "./Plant.ts";
+import { WeatherType } from "./WeatherType.ts";
 
 export class WorldState {
   readonly grid: Grid;
   plants: Plant[];
+  day: number;
   timeOfDay: number;     // 0..1
   dayLengthTicks: number;
   dayBaseTemp: number;
@@ -17,13 +18,15 @@ export class WorldState {
 
   constructor(
     grid: Grid,
+    day = 0,
     timeOfDay = 0,
-    dayLengthTicks = 20,
+    dayLengthTicks = 3000,
     dayBaseTemp = 24,
     nightBaseTemp = 12,
   ) {
     this.grid = grid;
     this.plants = [];
+    this.day = day;
     this.timeOfDay = timeOfDay;
     this.dayLengthTicks = dayLengthTicks;
     this.dayBaseTemp = dayBaseTemp;
@@ -57,7 +60,7 @@ export class WorldState {
       grid.ExposedToSunlight[cell] = 1;
     }
 
-    const worldState = new WorldState(grid, 0, 20, 20, 15);
+    const worldState = new WorldState(grid);
 
     // worldState.instantiatePlants();
 

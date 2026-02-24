@@ -1,5 +1,5 @@
 // src/world/RootNeighborhood.ts
-import { Grid } from "./Grid";
+import { Grid } from "./Grid.ts";
 
 export function rootCells(
   grid: Grid,

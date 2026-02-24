@@ -1,15 +1,15 @@
 // src/systems/PlantMetabolismSystem.ts
-import { System } from "../engine/System";
-import { Phase } from "../engine/Phase";
-import { TickContext } from "../engine/TickContext";
-import { SpeciesRegistry } from "../world/PlantSpeciesRegistry";
-import { rootCells } from "../world/RootNeighborhood";
-import { clamp01 } from "../utils/math";
+import { System } from "../engine/System.ts";
+import { Phase } from "../engine/Phase.ts";
+import { TickContext } from "../engine/TickContext.ts";
+import { SpeciesRegistry } from "../world/PlantSpeciesRegistry.ts";
+import { rootCells } from "../world/RootNeighborhood.ts";
+import { clamp01 } from "../utils/math.ts";
 import {
   computeNutrientFactor,
   getNutrientConsumptionRate,
   getNutrientOptimalLevel,
-} from "../world/NutrientModel";
+} from "../world/NutrientModel.ts";
 
 export class PlantMetabolismSystem implements System {
   readonly phase = Phase.PLANT_METABOLISM;

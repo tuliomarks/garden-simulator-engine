@@ -1,5 +1,5 @@
 // src/world/WeatherProfile.ts
-import { WeatherType } from "./WeatherType";
+import { WeatherType } from "./WeatherType.ts";
 
 export interface WeatherProfile {
   minDurationTicks: number;

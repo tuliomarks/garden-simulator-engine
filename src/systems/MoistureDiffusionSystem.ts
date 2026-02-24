@@ -1,8 +1,8 @@
 // src/systems/MoistureDiffusionSystem.ts
-import { System } from "../engine/System";
-import { Phase } from "../engine/Phase";
-import { TickContext } from "../engine/TickContext";
-import { Neighbors4 } from "../world/Neighbors";
+import { System } from "../engine/System.ts";
+import { Phase } from "../engine/Phase.ts";
+import { TickContext } from "../engine/TickContext.ts";
+import { Neighbors4 } from "../world/Neighbors.ts";
 
 export class MoistureDiffusionSystem implements System {
   readonly phase = Phase.MOISTURE;

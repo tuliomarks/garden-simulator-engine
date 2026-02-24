@@ -1,5 +1,5 @@
 // src/world/PlantSpeciesRegistry.ts
-import { PlantSpecies } from "./PlantSpecies";
+import { PlantSpecies } from "./PlantSpecies.ts";
 
 export const SpeciesRegistry: Record<number, PlantSpecies> = {
   1: {

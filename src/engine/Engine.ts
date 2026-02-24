@@ -1,7 +1,7 @@
 // src/engine/Engine.ts
-import { WorldState } from "../world/WorldState";
-import { System } from "./System";
-import { TickContext } from "./TickContext";
+import { WorldState } from "../world/WorldState.ts";
+import { System } from "./System.ts";
+import { TickContext } from "./TickContext.ts";
 
 export class Engine {
   private tick = 0;

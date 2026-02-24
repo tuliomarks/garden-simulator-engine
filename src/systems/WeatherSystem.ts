@@ -1,9 +1,9 @@
 // src/systems/WeatherSystem.ts
-import { System } from "../engine/System";
-import { Phase } from "../engine/Phase";
-import { TickContext } from "../engine/TickContext";
-import { WeatherType } from "../world/WeatherType";
-import { WeatherProfileRegistry } from "../world/WeatherProfile";
+import { System } from "../engine/System.ts";
+import { Phase } from "../engine/Phase.ts";
+import { TickContext } from "../engine/TickContext.ts";
+import { WeatherType } from "../world/WeatherType.ts";
+import { WeatherProfileRegistry } from "../world/WeatherProfile.ts";
 
 export class WeatherSystem implements System {
   readonly phase = Phase.WEATHER;

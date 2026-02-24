@@ -1,6 +1,6 @@
 // src/world/NutrientModel.ts
-import { clamp01 } from "../utils/math";
-import { PlantSpecies } from "./PlantSpecies";
+import { clamp01 } from "../utils/math.ts";
+import { PlantSpecies } from "./PlantSpecies.ts";
 
 export const DEFAULT_NUTRIENT_CONSUMPTION_RATE = 0.0005;
 export const DEFAULT_NUTRIENT_OPTIMAL_LEVEL = 1.0;

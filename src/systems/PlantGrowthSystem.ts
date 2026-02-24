@@ -1,10 +1,10 @@
 // src/systems/PlantGrowthSystem.ts
-import { System } from "../engine/System";
-import { Phase } from "../engine/Phase";
-import { TickContext } from "../engine/TickContext";
-import { SpeciesRegistry } from "../world/PlantSpeciesRegistry";
-import { clamp01 } from "../utils/math";
-import { getNutrientConsumptionRate } from "../world/NutrientModel";
+import { System } from "../engine/System.ts";
+import { Phase } from "../engine/Phase.ts";
+import { TickContext } from "../engine/TickContext.ts";
+import { SpeciesRegistry } from "../world/PlantSpeciesRegistry.ts";
+import { clamp01 } from "../utils/math.ts";
+import { getNutrientConsumptionRate } from "../world/NutrientModel.ts";
 
 export class PlantGrowthSystem implements System {
   readonly phase = Phase.PLANT_GROWTH;
