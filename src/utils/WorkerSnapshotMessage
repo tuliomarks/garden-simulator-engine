@@ -1,0 +1,8 @@
+import { GridStatus } from './world/GridStatus.ts';
+
+export interface WokerSnapshotMessage<T> {
+    type: string;
+    tick: number;
+    state: T;  
+    status: GridStatus;
+}

@@ -1,12 +1,19 @@
-import { Worker } from 'worker_threads';
 import readline from 'readline';
+import {
+  createSimulationWorker,
+  registerWorkerHandlers,
+  sendApplyFertilizerCommand,
+  sendStopCommand,
+  terminateWorker,
+  WorkerSnapshotMessage,
+} from './utils/worker.ts';
 
 /* ---------------------------------- */
 /* GLOBALS                            */
 /* ---------------------------------- */
 
-let worker: Worker | null = null;
-let lastSnapshot: any = null;
+let worker: ReturnType<typeof createSimulationWorker> | null = null;
+let lastSnapshot: WorkerSnapshotMessage | null = null;
 let readlineInterface: readline.Interface | null = null;
 
 /* ---------------------------------- */
@@ -50,7 +57,7 @@ function instantiateReadline() {
   rl.on('close', () => {
     console.log('\n\x1b[31m[Main] Closing...\x1b[0m');
     if (worker) {
-      worker.terminate();
+      terminateWorker(worker);
     }
     process.exit(0);
   });
@@ -70,14 +77,7 @@ function parseCommand(input: string) {
       if (isNaN(cell) || isNaN(amount)) {
         console.log('\x1b[31m[Error] Usage: fertilize <cell> <amount>\x1b[0m');
       } else if (worker) {
-        worker.postMessage({
-          type: 'command',
-          payload: {
-            type: 'applyFertilizer',
-            cell,
-            amount,
-          },
-        });
+        sendApplyFertilizerCommand(worker, cell, amount);
         console.log(`\x1b[32m[Main] Sent fertilizer command\x1b[0m`);
       }
       break;
@@ -92,12 +92,7 @@ function parseCommand(input: string) {
     case 'exit': {
       console.log('\x1b[31m[Main] Shutting down...\x1b[0m');
       if (worker) {
-        worker.postMessage({
-          type: 'command',
-          payload: {
-            type: 'stop',
-          },
-        });
+        sendStopCommand(worker);
       }
       readlineInterface?.close();
       break;
@@ -112,25 +107,22 @@ function parseCommand(input: string) {
 /* ---------------------------------- */
 
 function runSimulation(): void {
-  worker = new Worker(new URL('./engine.worker.bootstrap.mjs', import.meta.url), {
-    type: 'module',
-  });
-
-  worker.on('message', (msg) => {
-    lastSnapshot = null;
-    if (msg.type === 'snapshot') {
-      lastSnapshot = msg;
-    }
-    render();
-  });
-
-  worker.on('error', (err) => {
-    console.error('\x1b[31m[Worker Error]\x1b[0m', err);
-  });
-
-  worker.on('exit', (code) => {
-    console.log(`\x1b[31m[Worker] Exited with code ${code}\x1b[0m`);
-    process.exit(code);
+  worker = createSimulationWorker();
+  registerWorkerHandlers(worker, {
+    onMessage: (msg) => {
+      lastSnapshot = null;
+      if (msg.type === 'snapshot') {
+        lastSnapshot = msg;
+      }
+      render();
+    },
+    onError: (err) => {
+      console.error('\x1b[31m[Worker Error]\x1b[0m', err);
+    },
+    onExit: (code) => {
+      console.log(`\x1b[31m[Worker] Exited with code ${code}\x1b[0m`);
+      process.exit(code);
+    },
   });
 
   console.log('\x1b[32m[Main] Simulation started\x1b[0m\n');

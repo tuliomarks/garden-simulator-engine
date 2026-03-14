@@ -12,6 +12,7 @@ import { WorldTimeSystem } from './systems/WorldTimeSystem.ts';
 import { TileTemperatureSystem } from './systems/TileTemperatureSystem.ts';
 import { WeatherSystem } from './systems/WeatherSystem.ts';
 import { NutrientRegenerationSystem } from './systems/NutrientRegenerationSystem.ts';
+import { WorldStateMessage } from './utils/WorldStateMessage.ts';
 
 class EngineWorker {
   private readonly TICK_INTERVAL_MS = 200;
@@ -55,7 +56,7 @@ class EngineWorker {
     });
   }
 
-  private serializeState(state: WorldState): object {
+  private serializeState(state: WorldState): WorldStateMessage {
     return {
       day: state.day,
       timeOfDay: state.timeOfDay,
