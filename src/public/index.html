@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Garden Simulator</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #0b1220; color: #f8f9fc; }
+    .app { max-width: 1000px; margin: 0 auto; padding: 18px; }
+    .panel { background: #141a2d; border: 1px solid #2f3c62; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+    pre { background: #0d1124; border: 1px solid #2d3f72; border-radius: 8px; padding: 10px; max-height: 320px; overflow: auto; }
+    button { margin-right: 8px; border: none; border-radius: 6px; background: #2a7bff; color: white; font-weight: 600; padding: 8px 12px; cursor: pointer; }
+    button:hover { background: #1a64ea; }
+    input { width: 120px; border-radius: 6px; border: 1px solid #3f4f7e; background: #0d1332; color: white; padding: 6px 8px; margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Garden Simulator Live</h1>
+    <div class="panel">
+      <div><strong>Connection:</strong> <span id="connection">Connecting...</span></div>
+      <div><strong>Tick:</strong> <span id="tick">-</span></div>
+      <div><strong>Weather:</strong> <span id="weather">-</span></div>
+      <div><strong>Time:</strong> <span id="time">-</span></div>
+      <div style="margin-top:8px;"><strong>Controls:</strong>
+        <button id="btn-stop">Stop Simulation</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div style="margin-bottom: 6px;"><strong>Apply Fertilizer</strong></div>
+      <input id="cell" type="number" placeholder="cell" min="0" />
+      <input id="amount" type="number" placeholder="amount" step="0.1" min="0" />
+      <button id="btn-fertilize">Send</button>
+      <div id="fertilizeStatus" style="margin-top: 8px; color: #8edb8e;"></div>
+    </div>
+
+    <div class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between;"><strong>Latest Snapshot JSON</strong><button id="btn-refresh">Refresh</button></div>
+      <pre id="snapshot">No snapshot yet.</pre>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
